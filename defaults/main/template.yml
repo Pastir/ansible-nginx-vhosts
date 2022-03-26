@@ -1,0 +1,31 @@
+---
+
+nginx_create_directory_sites_available: false
+nginx_sites_available:
+  directory_location: /etc/nginx/sites_available
+
+nginx_create_directory_sites_enabled: false
+nginx_sites_enabled:
+  directory_location: /etc/nginx/sites_enabled
+
+
+# upstreams template section
+upstreams:
+  conf_file_location: /etc/nginx/conf.d
+  conf_file_name: upstreams.conf
+  template_file: templates/upstream/upstream.conf.j2
+  upstreams:
+    upstream1:
+      name: backend
+      lb_method: least_conn
+      zone_name: backend
+      zone_size: 64k
+      sticky_cookie: false
+      servers:
+        server1:
+          unix_socket: false
+          unix_socket_path:
+          address:
+          port:
+          weight:
+          health_check:

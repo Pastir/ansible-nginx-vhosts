@@ -1,0 +1,57 @@
+# VHost template section
+nginx_config_vhost_template_enable: true
+nginx_config_vhost_template:
+  template_file: vhost/vhost.conf.j2
+  conf_file_location: /etc/nginx/sites_available
+  conf_file_name: example.com.conf
+  servers:
+    server1:
+      root: /var/www/domains/example.com/htdocs
+      domain_name: example.com
+      server_name: []
+      http:
+        access_log: true
+        access_log_format: main
+        access_log_name: example.com_access.log
+        access_log_location: /var/log/nginx
+        error_log: true
+        error_log_name: example.com_error.log
+        error_log_location: /var/log/nginx
+        listen:
+          port: 80
+          ip: 0.0.0.0
+          custom_options: []
+      https:
+        access_log: true
+        access_log_name: example.com_ssl_access.log
+        access_log_location: /var/log/nginx
+        error_log: true
+        error_log_name: example.com_ssl_error.log
+        error_log_location: /var/log/nginx
+        listen:
+          port: 443
+          ip: 0.0.0.0
+          http2: true
+          custom_options: []
+        ssl:
+          cert: /etc/letsencrypt/live/
+          key: /etc/letsencrypt/live/
+          dhparam: /etc/letsencrypt/ssl-dhparams.pem
+          protocols: TLSv1.2 TLSv1.3
+          ciphers: "ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384"
+          prefer_server_ciphers: false
+          session_cache: shared:le_nginx_SSL:10m
+          session_timeout:  1440m
+          disable_session_tickets: false
+          trusted_cert:
+          ecdh_curve: auto
+          include_files: []
+      include_files: []
+      add_header: {}
+      redirect:
+      locations:
+        location1:
+          name: /
+          root:
+          proxy:
+            proxy_set_header: {}

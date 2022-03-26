@@ -1,0 +1,15 @@
+{{ ansible_managed | comment }}
+
+{% if upstreams.upstreams is defined %}
+{% for key, val in upstreams.upstreams.items() %}
+upstream {{ val.name }} {
+{% for skey, sval in val.servers.items() %}
+    {% if sval.unix_socket | bool and sval.unix_socket_path is defined %}
+    server unix:{{ sval.unix_socket_path }};
+    {% else %}
+    server {{ sval.address }}{{(":" + sval.port | string) if sval.port is defined}} {% if sval.backup is defined and sval.backup %}backup{% endif %} {% if sval.down is defined and sval.down %}down{% else %}weight={{ sval.weight | default("1") }} {{ sval.health_check | default("") }}{% endif %};
+    {% endif %}
+{% endfor %}
+}
+{% endfor %}
+{% endif %}

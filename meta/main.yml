@@ -1,0 +1,29 @@
+---
+galaxy_info:
+  author: Pastir Ivan
+  description: Configuration virtual hosts
+  role_name: nginx_vhost
+
+  license: Apache License, Version 2.0
+
+  min_ansible_version: 2.9
+
+  platforms:
+    - name: EL
+      versions:
+        - 7
+        - 8
+    - name: Ubuntu
+      versions:
+        - focal
+
+  galaxy_tags:
+    - nginx
+    - opensource
+    - plus
+    - web
+    - server
+    - virtual host
+    - configuration
+
+dependencies: []

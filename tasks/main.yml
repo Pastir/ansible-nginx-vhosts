@@ -1,0 +1,40 @@
+---
+- name: Cleanup NGINX config
+  include_tasks: "{{ role_path }}/tasks/config/cleanup-config.yml"
+  when: nginx_config_cleanup | bool
+  tags: nginx_config_cleanup
+
+- name: Create NGINX config
+  include_tasks: "{{ role_path }}/tasks/config/template-config.yml"
+  when: nginx_config_main_template_enable
+        or nginx_config_status_enable
+  tags: nginx_config_template
+
+- name: Upload NGINX config
+  include_tasks: "{{ role_path }}/tasks/config/upload-config.yml"
+  when: nginx_config_main_upload_enable | bool
+  tags: nginx_config_upload
+
+- name: Upload NGINX gzip config
+  include_tasks: "{{ role_path }}/tasks/config/upload-gzip-config.yml"
+  when: nginx_config_gzip_upload_enable | bool
+  tags: nginx_gzip_config_upload
+
+- name: Upload NGINX upstream config
+  include_tasks: "{{ role_path }}/tasks/config/upload-upstream-config.yml"
+  when: nginx_config_upstream_upload_enable | bool
+  tags: nginx_upstream_config_upload
+
+- name: Upload NGINX vhosts config
+  include_tasks: "{{ role_path }}/tasks/config/upload-vhost-config.yml"
+  when: nginx_config_vhost_upload_enable | bool
+  tags: nginx_vhost_config_upload
+
+
+- name: Ensure NGINX is running
+  meta: flush_handlers
+
+- name: Debug output
+  include_tasks: "{{ role_path }}/tasks/config/debug-output.yml"
+  when: nginx_config_debug_output | bool
+  tags: nginx_config_debug_output

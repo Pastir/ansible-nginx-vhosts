@@ -1,0 +1,12 @@
+---
+- name: Upload NGINX vhost config file
+  ansible.builtin.template:
+    src: "{{ nginx_config_vhost_template.servers.template_file }}"
+    dest: "{{ nginx_config_vhost_template.servers.conf_file_location | default('/etc/nginx/sites_available') }}/{{ nginx_config_vhost_template.servers.conf_file_name }}"
+    backup: yes
+    owner: nginx
+    group: root
+    mode: 0644
+  notify: (Handler - NGINX Config) Run NGINX
+  when: nginx_config_vhost_template_enable | bool
+  tags: nginx_vhost_config_upload

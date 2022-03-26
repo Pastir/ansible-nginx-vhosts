@@ -1,0 +1,3 @@
+---
+nginx_config_upstream_upload_enable: false
+nginx_config_vhost_upload_enable: false
