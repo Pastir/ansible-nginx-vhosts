@@ -1,31 +1,56 @@
 ---
-
+# sites_available
 nginx_create_directory_sites_available: false
 nginx_sites_available:
   directory_location: /etc/nginx/sites_available
 
+# sites_enabled
 nginx_create_directory_sites_enabled: false
 nginx_sites_enabled:
   directory_location: /etc/nginx/sites_enabled
 
-
 # upstreams template section
+upstream_conf_file_location: /etc/nginx/conf.d
+upstream_conf_file_name: upstreams.conf
+upstream_template_file: templates/upstream/upstream.conf.j2
+
+# http://nginx.org/en/docs/http/ngx_http_upstream_module.html
 upstreams:
-  conf_file_location: /etc/nginx/conf.d
-  conf_file_name: upstreams.conf
-  template_file: templates/upstream/upstream.conf.j2
-  upstreams:
-    upstream1:
-      name: backend
-      lb_method: least_conn
-      zone_name: backend
-      zone_size: 64k
-      sticky_cookie: false
-      servers:
-        server1:
-          unix_socket: false
-          unix_socket_path:
-          address:
-          port:
-          weight:
-          health_check:
+  -
+       name: backend
+       least_conn: false
+       least_time: false
+       queue: false
+       sticky:
+         cookie:
+           name: srv_id
+           expires: 1h
+           domain: .example.com
+           httponly: true
+           path: /
+           secure: true
+           samesite:
+              strict: false
+              lax: false
+              none: true
+       zone:
+         name: upstream_dynamic
+         size: 64k
+       keepalive: 32
+       keepalive_requests: 1000
+       keepalive_time: 1h
+       keepalive_timeout: 60s
+       servers:
+          -
+              weight: 5
+              max_conns: 100
+              max_fails: 3
+              fail_timeout: 30s
+              slow_start: 30s
+              backup: true
+              down: false
+              resolve: false
+              service: http
+              drain: false
+              unix_socket: false
+              address: backend2.example.com

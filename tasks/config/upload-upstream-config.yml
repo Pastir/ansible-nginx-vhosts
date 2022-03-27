@@ -1,13 +1,12 @@
 ---
-
 - name: Upload NGINX upstream config file
   ansible.builtin.template:
-    src: "{{ upstreams.template_file }}"
-    dest: "{{ upstreams.conf_file_location | default('/etc/nginx/conf.d') }}/{{ upstreams.conf_file_name | default('upstream.conf') }}"
+    src: "{{ upstream_template_file }}"
+    dest: "{{ upstream_conf_file_location | default('/etc/nginx/conf.d') }}/{{ upstream_conf_file_name | default('upstream.conf') }}"
     backup: yes
     owner: nginx
     group: root
     mode: 0644
-  notify: (Handler - NGINX Config) Run NGINX
   when: nginx_config_upstream_upload_enable | bool
+  loop: "{{ upstreams }}"
   tags: nginx_upstream_config_upload
